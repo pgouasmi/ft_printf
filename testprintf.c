@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/30 16:08:48 by pgouasmi          #+#    #+#             */
-/*   Updated: 2022/12/01 17:20:47 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2022/12/02 14:31:24 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,38 +15,33 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <strings.h>
-int	ft_digit_count(unsigned int n, int *div, int base)
+int	ft_digit_count(unsigned int n, int *div)
 {
 	int	i;
 	
 	i = 1;
-	while (n / *div >= base)
+	while (n / *div >= 10)
 	{
-		*div = *div * base;
+		*div = *div * 10;
 		i++;
 	}
 	return (i);
 }
 
-char	*ft_put_digit(char *str, unsigned int nbr, int i, int diviseur, int basevalue)
+char	*ft_put_digit(char *str, unsigned int nbr, int i, int diviseur)
 {
-	char *base;
-	
-	if (basevalue <= 10)
+	while (diviseur >= 1)
 	{
-		while (diviseur >= 1)
-		{
-			str[i] = nbr / diviseur + 48;
-			nbr = nbr - ((str[i] - 48) * diviseur);
-			diviseur = diviseur / basevalue;
-			i++;
-		}
-		str[i] = '\0';
-		return (str);
+		str[i] = nbr / diviseur + 48;
+		nbr = nbr - ((str[i] - 48) * diviseur);
+		diviseur = diviseur / 10;
+		i++;
 	}
+	str[i] = '\0';
+	return (str);
 }
 
-char	*ft_itoa(int n, int base)
+char	*ft_itoa(int n)
 {
 	char				*str;
 	int					i;
@@ -60,10 +55,10 @@ char	*ft_itoa(int n, int base)
 	if (n < 0)
 	{
 		nbr = nbr * -1;
-		str = malloc(sizeof(char) * ft_digit_count(nbr, &div, base) + 2);
+		str = malloc(sizeof(char) * ft_digit_count(nbr, &div) + 2);
 	}
 	else
-		str = malloc(sizeof(char) * ft_digit_count(nbr, &div, base) + 1);
+		str = malloc(sizeof(char) * ft_digit_count(nbr, &div) + 1);
 	if (!str)
 		return (0);
 	if (n < 0)
@@ -72,7 +67,119 @@ char	*ft_itoa(int n, int base)
 		nbr = n * -1;
 		i++;
 	}
-		return (ft_put_digit(str, nbr, i, div, base));
+	str = ft_put_digit(str, nbr, i, div);
+	return (str);
+}
+
+void	ft_error(char *base, int *error)
+{
+	long int	i;
+	long int	j;
+
+	i = 0;
+	j = 1;
+	while (base[j])
+	{
+		while (base[i])
+		{
+			if (i != j)
+			{
+				if (base[i] == base[j] || base[i] == '+' || base[i] == '-')
+					*error = 1;
+				else
+					i++;
+			}
+			else
+				i++;
+		}
+		j++;
+		i = 0;
+	}
+	*error = 0;
+}
+
+long int	ft_length(char *base)
+{
+	long int	i;
+
+	i = 0;
+	while (base[i])
+	{
+		i++;
+	}
+	return (i);
+}
+
+void	ft_putnbr_base_X(int nbr, size_t *writtenChar)
+{
+	int			error;
+	long int	lnbr;
+	char *base = "0123456789ABCDEF";
+
+	ft_error(base, &error);
+	if (error == 0)
+	{
+		if (nbr < 0)
+		{
+			write(1, "-", 1);
+			(*writtenChar)++;
+			nbr = nbr * -1;
+		}
+		lnbr = nbr;
+		if (ft_length(base) <= 1)
+		{
+			write(1, "Error\n", 6);
+			(*writtenChar)++;
+		}
+		if (lnbr < ft_length(base))
+		{
+			write(1, &base[lnbr % ft_length(base)], 1);
+			(*writtenChar)++;
+		}
+		if (lnbr > ft_length(base))
+		{
+			write(1, &base[lnbr / ft_length(base)], 1);
+			write(1, &base[lnbr % ft_length(base)], 1);
+			(*writtenChar) += 2;
+		}
+	}
+}
+
+void	ft_putnbr_base_x(size_t nbr, size_t *writtenChar)
+{
+	int		error;
+	size_t	lnbr;
+	char *base = "0123456789abcdef";
+
+	printf("\n%zu\n\n", nbr);
+
+	ft_error(base, &error);
+	if (error == 0)
+	{
+		if (nbr < 0)
+		{
+			write(1, "-", 1);
+			(*writtenChar)++;
+			nbr = nbr * -1;
+		}
+		lnbr = nbr;
+		if (ft_length(base) <= 1)
+		{
+			write(1, "Error\n", 6);
+			(*writtenChar)++;
+		}
+		if (lnbr < ft_length(base))
+		{
+			write(1, &base[lnbr % ft_length(base)], 1);
+			(*writtenChar)++;
+		}
+		if (lnbr > ft_length(base))
+		{
+			write(1, &base[lnbr / ft_length(base)], 1);
+			write(1, &base[lnbr % ft_length(base)], 1);
+			(*writtenChar) += 2;
+		}
+	}
 }
 
 int	ft_printf(const char *format, ...)
@@ -82,7 +189,6 @@ int	ft_printf(const char *format, ...)
 	char	currentChar;
 	char 	*str;
 	size_t	i;
-	int base;
 
 	if (write(1, 0, 0) != 0)
 		return(-1);
@@ -119,8 +225,7 @@ int	ft_printf(const char *format, ...)
 			}
 			else if (format[i] == 'i')
 			{
-				base = 10;
-				str = ft_itoa(va_arg(parameterInfos, int), base);
+				str = ft_itoa(va_arg(parameterInfos, int));
 				currentChar = *str;
 				while(*str)
 				{
@@ -132,8 +237,7 @@ int	ft_printf(const char *format, ...)
 			}
 			else if (format[i] == 'd')
 			{
-				base = 10;
-				str = ft_itoa(va_arg(parameterInfos, int), base);
+				str = ft_itoa(va_arg(parameterInfos, int));
 				currentChar = *str;
 				while(*str)
 				{
@@ -150,16 +254,10 @@ int	ft_printf(const char *format, ...)
 			}
 			else if (format[i] == 'p')
 			{
-				str = va_arg(parameterInfos, void *);
-				currentChar = *str;
-				while(*str)
-				{
-					currentChar = *str;
-					write(1, &currentChar, 1);
-					writtenChar++;
-					str++;
-				}
+				write(1, "0x", 2);
+				ft_putnbr_base_x(va_arg(parameterInfos, size_t), &writtenChar);
 			}
+			/*
 			else if (format[i] == 'o')
 			{
 				base = 8;
@@ -173,13 +271,13 @@ int	ft_printf(const char *format, ...)
 					str++;
 				}	
 			}
+			*/
 			else if (format[i] == 'u')
 			{
-				base = 10;
 				int nbr = va_arg(parameterInfos, int);
 				if (nbr < 0)
 					nbr *= -1;
-				str = ft_itoa(nbr, base);
+				str = ft_itoa(nbr);
 				currentChar = *str;
 				while(*str)
 				{
@@ -189,23 +287,14 @@ int	ft_printf(const char *format, ...)
 					str++;
 				}	
 			}
+			else if (format[i] == 'X')
+				ft_putnbr_base_X(va_arg(parameterInfos, int), &writtenChar);
 			else if (format[i] == 'x')
-			{
-				base = 16;
-				str = ft_itoa(va_arg(parameterInfos, int), base);
-				currentChar = *str;
-				while(*str)
-				{
-					currentChar = *str;
-					write(1, &currentChar, 1);
-					writtenChar++;
-					str++;
-				}
-			
-			}
+				ft_putnbr_base_x(va_arg(parameterInfos, int), &writtenChar);
 			i++;
 		}
 	}
+	va_end(parameterInfos);
 	return (writtenChar);
 }
 
@@ -214,7 +303,11 @@ int main()
 {
 	char prenom[] = "pascal";
 	char nom[] = "gsm";
-	int	age = -27;
+	int	age = -215617;
 	//const char format[] = "sd";
-	ft_printf("Je m'apppp%dppp%%pp%cpelle %s\n", age, 'Z', prenom);
+	ft_printf("%X\n\n", age);
+	// printf("%zd\n", &age);
+	// printf("%p\n", &age);
+	// ft_printf("%p\n", &age);
+	return(0);
 }
