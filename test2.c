@@ -1,3 +1,9 @@
+#include <stdarg.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <strings.h>
+
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -6,7 +12,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/30 16:08:48 by pgouasmi          #+#    #+#             */
-/*   Updated: 2022/12/05 15:17:32 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2022/12/05 13:30:42 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +21,6 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <strings.h>
-
 int	ft_digit_count(unsigned int n, int *div)
 {
 	int	i;
@@ -48,6 +53,7 @@ char	*ft_itoa(int n)
 	int					i;
 	int					div;
 	unsigned int		nbr;
+
 
 	i = 0;
 	div = 1;
@@ -178,31 +184,6 @@ void	ft_putnbr_base_x(size_t nbr, size_t *writtenChar)
 	}
 }
 
-/*
-int	check_arg_validity(const char *format, ...)
-{
-	va_list parameterInfos;
-	size_t	i;
-
-	va_start(parameterInfos, format);
-	i = 0;
-	while (format[i])
-	{
-		if (format[i] == '%')
-		{
-			if (format[i + 1] == '%' && format[i + 2] == '%')
-				return (0);
-			else if (format[i + 1] != 'c' || format[i + 1] != 's' || format[i + 1] != 'p'
-			|| format[i + 1] != 'd' || format[i + 1] != 'i' || format[i + 1] != 'u'
-			|| format[i + 1] != 'x' || format[i + 1] != 'X')
-				return (0);
-		}
-		i++;
-	}
-	return (1);
-}
-*/
-
 int	ft_printf(const char *format, ...)
 {
 	va_list parameterInfos;
@@ -266,13 +247,11 @@ int	ft_printf(const char *format, ...)
 					str++;
 				}	
 			}
-			/*
 			else if (*format == '%' )
 			{
 				write(1, &currentChar, 1);
 				writtenChar++;
 			}
-			*/
 			else if (*format == 'p')
 			{
 				write(1, "0x", 2);
@@ -299,9 +278,6 @@ int	ft_printf(const char *format, ...)
 
 			else if (*format == 'x')
 				ft_putnbr_base_x(va_arg(parameterInfos, size_t), &writtenChar);
-			currentChar = *format;
-			write(1, &currentChar, 1);
-			writtenChar++;
 			format++;
 		}
 	}
@@ -309,13 +285,18 @@ int	ft_printf(const char *format, ...)
 	return (writtenChar);
 }
 
+
 int main()
 {
 	char prenom[] = "pascal";
 	char nom[] = "gsm";
 	int	age = 161561451;
-	ft_printf("%%%%%%Q%d\n", age);
-	printf("%%%%%%Q%d\n", age);
-
+	//const char format[] = "sd";
+	ft_printf("%i\n", ft_printf("%p\n", &age));
+	printf("%d\n", printf("%p\n", &age));
+	// printf("%zd\n", &age);
+	// printf("%p\n", &age);
+	// ft_printf("%p\n", &age);
 	return(0);
 }
+
