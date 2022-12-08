@@ -1,22 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_front.c                                  :+:      :+:    :+:   */
+/*   ft_putstr_pf.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/28 09:22:11 by pgouasmi          #+#    #+#             */
-/*   Updated: 2022/11/28 13:26:29 by pgouasmi         ###   ########.fr       */
+/*   Created: 2022/12/08 12:40:52 by pgouasmi          #+#    #+#             */
+/*   Updated: 2022/12/08 16:40:15 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "ft_printf.h"
 
-void	ft_lstadd_front(t_list **lst, t_list *new)
+void	ft_putstr_pf(const char *s, size_t *char_count)
 {
-	if (lst && new)
+	if (!s)
+		ft_putstr_pf((const char *)"(null)", char_count);
+	else
 	{
-		new->next = *lst;
-		*lst = new;
+		while (*s)
+		{
+			ft_putchar_pf(*s, char_count);
+			s++;
+		}
 	}
 }

@@ -6,7 +6,7 @@
 #    By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/22 15:15:07 by pgouasmi          #+#    #+#              #
-#    Updated: 2022/12/07 16:43:50 by pgouasmi         ###   ########.fr        #
+#    Updated: 2022/12/08 16:32:28 by pgouasmi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,8 +49,6 @@ SRCS =	ft_isalnum.c	\
 		ft_putstr_fd.c	\
 		ft_putendl_fd.c	\
 		ft_putnbr_fd.c	\
-		ft_putnbr_hexa_min.c	\
-		ft_putnbr_hexa_cap.c	\
 
 OBJS = ${SRCS:.c=.o}
 

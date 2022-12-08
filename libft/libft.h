@@ -6,15 +6,21 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 13:10:49 by pgouasmi          #+#    #+#             */
-/*   Updated: 2022/12/07 17:01:21 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2022/12/08 16:44:57 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
-#define LIBFT_H
+# define LIBFT_H
 
-#include <stdlib.h>
-#include <unistd.h>
+# include <stdlib.h>
+# include <unistd.h>
+
+typedef struct s_list
+{
+	void			*content;
+	struct s_list	*next;
+}				t_list;
 
 int		ft_atoi(const char *str);
 int		ft_isalnum(int c);
